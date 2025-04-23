@@ -1,0 +1,16 @@
+C:\Users\abdal\Downloads\Very important Stuff (really)\Projects\IntrotoCyberTask\Smart CAPTCHA Generator\bin\Debug\net8.0-windows\smartCAPTCHA.exe
+C:\Users\abdal\Downloads\Very important Stuff (really)\Projects\IntrotoCyberTask\Smart CAPTCHA Generator\bin\Debug\net8.0-windows\smartCAPTCHA.deps.json
+C:\Users\abdal\Downloads\Very important Stuff (really)\Projects\IntrotoCyberTask\Smart CAPTCHA Generator\bin\Debug\net8.0-windows\smartCAPTCHA.runtimeconfig.json
+C:\Users\abdal\Downloads\Very important Stuff (really)\Projects\IntrotoCyberTask\Smart CAPTCHA Generator\bin\Debug\net8.0-windows\smartCAPTCHA.dll
+C:\Users\abdal\Downloads\Very important Stuff (really)\Projects\IntrotoCyberTask\Smart CAPTCHA Generator\bin\Debug\net8.0-windows\smartCAPTCHA.pdb
+C:\Users\abdal\Downloads\Very important Stuff (really)\Projects\IntrotoCyberTask\Smart CAPTCHA Generator\obj\Debug\net8.0-windows\CVValidator.Form1.resources
+C:\Users\abdal\Downloads\Very important Stuff (really)\Projects\IntrotoCyberTask\Smart CAPTCHA Generator\obj\Debug\net8.0-windows\smartCAPTCHA.csproj.GenerateResource.cache
+C:\Users\abdal\Downloads\Very important Stuff (really)\Projects\IntrotoCyberTask\Smart CAPTCHA Generator\obj\Debug\net8.0-windows\smartCAPTCHA.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\abdal\Downloads\Very important Stuff (really)\Projects\IntrotoCyberTask\Smart CAPTCHA Generator\obj\Debug\net8.0-windows\smartCAPTCHA.AssemblyInfoInputs.cache
+C:\Users\abdal\Downloads\Very important Stuff (really)\Projects\IntrotoCyberTask\Smart CAPTCHA Generator\obj\Debug\net8.0-windows\smartCAPTCHA.AssemblyInfo.cs
+C:\Users\abdal\Downloads\Very important Stuff (really)\Projects\IntrotoCyberTask\Smart CAPTCHA Generator\obj\Debug\net8.0-windows\smartCAPTCHA.csproj.CoreCompileInputs.cache
+C:\Users\abdal\Downloads\Very important Stuff (really)\Projects\IntrotoCyberTask\Smart CAPTCHA Generator\obj\Debug\net8.0-windows\smartCAPTCHA.dll
+C:\Users\abdal\Downloads\Very important Stuff (really)\Projects\IntrotoCyberTask\Smart CAPTCHA Generator\obj\Debug\net8.0-windows\refint\smartCAPTCHA.dll
+C:\Users\abdal\Downloads\Very important Stuff (really)\Projects\IntrotoCyberTask\Smart CAPTCHA Generator\obj\Debug\net8.0-windows\smartCAPTCHA.pdb
+C:\Users\abdal\Downloads\Very important Stuff (really)\Projects\IntrotoCyberTask\Smart CAPTCHA Generator\obj\Debug\net8.0-windows\smartCAPTCHA.genruntimeconfig.cache
+C:\Users\abdal\Downloads\Very important Stuff (really)\Projects\IntrotoCyberTask\Smart CAPTCHA Generator\obj\Debug\net8.0-windows\ref\smartCAPTCHA.dll
