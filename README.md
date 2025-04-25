@@ -1,7 +1,11 @@
 # Smart CAPTCHA Generator in C# (Windows Forms)
+## Version 1
 https://github.com/user-attachments/assets/98ff2cd4-d3aa-433c-a480-b3af624bbde5
 
+## Version 2
+https://github.com/user-attachments/assets/7de4ca29-141d-4751-8ee4-2088d51dddb4
 
+## Description
 This project is a CAPTCHA generator implemented in C# using Windows Forms. It supports four types of CAPTCHAs: Text-Based, Image-Based, Math-Based, and reCAPTCHA Checkbox. Each type includes validation logic to check if the user input matches the generated CAPTCHA, with clear success or error messages displayed accordingly. Users can also refresh the CAPTCHA to get a new challenge.
 
 ## Features
