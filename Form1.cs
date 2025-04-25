@@ -130,8 +130,22 @@ namespace CVValidator
 
         private void UpdateUIForSelectedCaptchaType()
         {
+            
+
             if (comboCaptchaType.SelectedItem is null) return;
             string selectedCaptchaType = comboCaptchaType.SelectedItem?.ToString() ?? "";
+         
+            var dynamicControls = panelCaptchaContainer.Controls
+                .OfType<Control>()
+                .Where(c => c.Tag?.ToString() == "colorBox")
+                .ToList();
+
+            foreach (var ctrl in dynamicControls)
+            {
+                panelCaptchaContainer.Controls.Remove(ctrl);
+                ctrl.Dispose();
+            }
+
 
             // Reset all controls visibility first
             txtCaptchaInput.Visible = true;
@@ -146,8 +160,8 @@ namespace CVValidator
             switch (selectedCaptchaType)
             {
                 case "Text-Based":
-                    lblTextCaptcha.Visible = true;  
-                    picCaptchaImage.Visible = false; 
+                    lblTextCaptcha.Visible = true;
+                    picCaptchaImage.Visible = false;
                     statusLabel.Text = "Text-Based CAPTCHA Selected";
                     break;
                 case "Image-Based":
@@ -185,27 +199,83 @@ namespace CVValidator
             switch (selectedCaptchaType)
             {
                 case "Image-Based":
-                    // Generate unique text that hasn't been used recently
+                    picCaptchaImage.Visible = false;
+                    txtCaptchaInput.Visible = true;
+                    txtCaptchaInput.Text = "";
+
+                    panelCaptchaContainer.Controls.OfType<Button>()
+                        .Where(b => b.Tag?.ToString() == "colorBox")
+                        .ToList()
+                        .ForEach(b => panelCaptchaContainer.Controls.Remove(b));
+
+                    Color[] colors = new Color[]
+                    {
+        Color.Red, Color.Green, Color.Blue, Color.Yellow,
+        Color.Orange, Color.Purple, Color.Brown, Color.Pink, Color.Teal
+                    };
+
+                    colors = colors.OrderBy(x => random.Next()).ToArray();
+                    Color targetColor = colors[random.Next(colors.Length)];
+                    currentCaptchaText = targetColor.Name.ToLower();
+
+                    lblInstruction.Text = $"Click the box with this color: {currentCaptchaText.ToUpper()}";
+
+                    int size = 50;
+                    int spacing = 10;
+                    int startX = 55;
+                    int startY = 70;
+                    int index = 0;
+
+                    for (int row = 0; row < 3; row++)
+                    {
+                        for (int col = 0; col < 3; col++)
+                        {
+                            Button box = new Button();
+                            box.Size = new Size(size, size);
+                            box.Location = new Point(startX + col * (size + spacing), startY + row * (size + spacing));
+                            box.BackColor = colors[index++];
+                            box.Tag = "colorBox";
+                            box.FlatStyle = FlatStyle.Flat;
+                            box.FlatAppearance.BorderSize = 1;
+                            box.Click += (s, e) =>
+                            {
+                                Color clickedColor = ((Button)s).BackColor;
+                                if (clickedColor.Name.ToLower() == currentCaptchaText)
+                                {
+                                    MessageBox.Show("Correct color selected!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    statusLabel.Text = "Color CAPTCHA Passed";
+                                    GenerateCaptcha();
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Wrong color. Try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    statusLabel.Text = "Color CAPTCHA Failed";
+                                }
+                            };
+                            panelCaptchaContainer.Controls.Add(box);
+                        }
+                    }
+                    break;
+
+
+                case "Text-Based":
                     do
                     {
                         currentCaptchaText = GenerateRandomText();
                     } while (usedCaptchas.Contains(currentCaptchaText));
 
-                    // Remember this CAPTCHA to avoid reuse
                     usedCaptchas.Add(currentCaptchaText);
-                    if (usedCaptchas.Count > 10) // Keep the 10 most recent CAPTCHAs
+                    if (usedCaptchas.Count > 10)
                     {
                         usedCaptchas.Remove(usedCaptchas.First());
                     }
 
-                    // Create a text-based CAPTCHA image
                     Bitmap textCaptchaImage = new Bitmap(330, 95);
                     using (Graphics g = Graphics.FromImage(textCaptchaImage))
                     {
                         g.SmoothingMode = SmoothingMode.AntiAlias;
                         g.Clear(Color.FromArgb(250, 250, 255));
 
-                        // Add noise/patterns to background
                         using (Pen noisePen = new Pen(Color.FromArgb(230, 230, 240), 1))
                         {
                             for (int i = 0; i < 20; i++)
@@ -218,70 +288,35 @@ namespace CVValidator
                             }
                         }
 
-                        // Draw the text with varied colors, angles, and positions
                         for (int i = 0; i < currentCaptchaText.Length; i++)
                         {
                             using (Font charFont = new Font("Consolas", 26 + random.Next(-5, 6), FontStyle.Bold))
+                            using (SolidBrush brush = new SolidBrush(GetRandomDarkColor()))
                             {
-                                using (SolidBrush brush = new SolidBrush(GetRandomDarkColor()))
-                                {
-                                    // Compute position
-                                    float xPos = 20 + (i * 45) + random.Next(-5, 6);
-                                    float yPos = 20 + random.Next(-10, 11);
-
-                                    // Create a rotation matrix
-                                    Matrix rotationMatrix = new Matrix();
-                                    rotationMatrix.RotateAt(random.Next(-15, 16), new PointF(xPos, yPos));
-                                    g.Transform = rotationMatrix;
-
-                                    // Draw the character
-                                    g.DrawString(currentCaptchaText[i].ToString(), charFont, brush, xPos, yPos);
-
-                                    // Reset transformation
-                                    g.ResetTransform();
-                                }
+                                float xPos = 20 + (i * 45) + random.Next(-5, 6);
+                                float yPos = 20 + random.Next(-10, 11);
+                                Matrix matrix = new Matrix();
+                                matrix.RotateAt(random.Next(-15, 16), new PointF(xPos, yPos));
+                                g.Transform = matrix;
+                                g.DrawString(currentCaptchaText[i].ToString(), charFont, brush, xPos, yPos);
+                                g.ResetTransform();
                             }
                         }
 
-                        // Add some lines across the text for more complexity
                         using (Pen linePen = new Pen(GetRandomDarkColor(), 2))
                         {
-                            g.DrawLine(linePen,
-                                0, random.Next(20, textCaptchaImage.Height - 20),
-                                textCaptchaImage.Width, random.Next(20, textCaptchaImage.Height - 20));
-                            g.DrawLine(linePen,
-                                0, random.Next(20, textCaptchaImage.Height - 20),
-                                textCaptchaImage.Width, random.Next(20, textCaptchaImage.Height - 20));
+                            g.DrawLine(linePen, 0, random.Next(20, 75), textCaptchaImage.Width, random.Next(20, 75));
                         }
                     }
+
                     picCaptchaImage.Image = textCaptchaImage;
+                    picCaptchaImage.Visible = true;
                     txtCaptchaInput.Text = "";
                     break;
-
-                case "Text-Based":
-                    // Generate unique text that hasn't been used recently
-                    do
-                    {
-                        currentCaptchaText = GenerateRandomText();
-                    } while (usedCaptchas.Contains(currentCaptchaText));
-
-                    usedCaptchas.Add(currentCaptchaText);
-                    if (usedCaptchas.Count > 10)
-                    {
-                        usedCaptchas.Remove(usedCaptchas.First());
-                    }
-
-                    lblTextCaptcha.Text = currentCaptchaText;
-                    lblTextCaptcha.Visible = true;
-                    txtCaptchaInput.Text = "";
-
-                   
-                    break;
-
                 case "Math-Based":
                     int a = random.Next(1, 20);
                     int b = random.Next(1, 20);
-                    string operation = random.Next(0, 4) switch // Added division as an option
+                    string operation = random.Next(0, 4) switch
                     {
                         0 => "+",
                         1 => "-",
@@ -295,20 +330,17 @@ namespace CVValidator
                             currentCaptchaText = (a + b).ToString();
                             break;
                         case "-":
-                            // Ensure positive result
                             if (a < b) { int temp = a; a = b; b = temp; }
                             currentCaptchaText = (a - b).ToString();
                             break;
                         case "×":
-                            // Use smaller numbers for multiplication
                             a = random.Next(1, 10);
                             b = random.Next(1, 10);
                             currentCaptchaText = (a * b).ToString();
                             break;
                         case "÷":
-                            // Generate division with whole number result
                             b = random.Next(1, 10);
-                            a = b * random.Next(1, 10); // This ensures a is divisible by b
+                            a = b * random.Next(1, 10);
                             currentCaptchaText = (a / b).ToString();
                             break;
                     }
@@ -317,11 +349,6 @@ namespace CVValidator
                     txtCaptchaInput.Text = "";
                     break;
 
-                case "reCAPTCHA Checkbox":
-                    currentCaptchaText = "reCAPTCHA";
-                    chkReCaptcha.Checked = false;
-                    UpdateRecaptchaVerificationImage();
-                    break;
             }
         }
 
@@ -401,7 +428,8 @@ namespace CVValidator
                 System.Windows.Forms.Timer verifyTimer = new System.Windows.Forms.Timer();
 
                 verifyTimer.Interval = 1500;
-                verifyTimer.Tick += (s, args) => {
+                verifyTimer.Tick += (s, args) =>
+                {
                     verifyTimer.Stop();
                     UpdateRecaptchaVerificationImage();
                     Cursor = Cursors.Default;
@@ -840,6 +868,11 @@ namespace CVValidator
             {
                 pictureBoxLogo.Image.Dispose();
             }
+        }
+
+        private void picCaptchaImage_Click(object sender, EventArgs e)
+        {
+
         }
 
         // The InitializeComponent method would be auto-generated and contain designer code
